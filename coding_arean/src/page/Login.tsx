@@ -1,12 +1,17 @@
-import  { useState } from 'react';
+import  {useEffect, useState } from 'react';
 import { Code2, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { signupRequest } from '../redux/slice/authSlice';
-import { useDispatch } from 'react-redux';
+import { loginRequest, signupRequest } from '../redux/slice/authSlice';
+import { useDispatch,useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Login() {
   const dispatch = useDispatch();
+  const navigator = useNavigate();
+  const {isAuthenticated} = useSelector((state:any)=>state.auth);
   const [currentPage, setCurrentPage] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,8 +19,8 @@ export default function Login() {
     confirmPassword: ''
   });
 
+  console.log("Authenticated:", isAuthenticated);
   
-
   const handleInputChange = (e:any) => {
     setFormData({
       ...formData,
@@ -25,7 +30,12 @@ export default function Login() {
 
   const handleSubmit = () => {
     if (currentPage === 'login') {
-      console.log('Login:', { email: formData.email, password: formData.password });
+      dispatch(
+        loginRequest({
+        email : formData.email,
+        password : formData.password,
+      })
+    )
       alert('Login functionality would be implemented here');
     } else {
       dispatch(signupRequest({
@@ -37,6 +47,13 @@ export default function Login() {
       alert('Signup functionality would be implemented here');
     }
   };
+
+
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigator('/dashboard');
+    }
+  })
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
