@@ -31,6 +31,12 @@ export const loginApi = async (data: LoginPayload) => {
   }
 };
 
+
+
 export const logoutApi = async ()=> {
   return api.post("/account/logout/");
+}
+
+export const checkAuthApi = async()=>{
+  return api.get("/account/check-auth/");
 }

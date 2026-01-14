@@ -1,7 +1,8 @@
-import {useState } from 'react';
+import {useEffect, useState } from 'react';
 import { LogOut, User } from 'lucide-react';
-import { useDispatch, } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { logoutRequest } from '../redux/slice/authSlice';
+import { getUserProfileRequest } from '../redux/slice/userProfile';
 import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -9,15 +10,16 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Dummy user data
-  const user = {
-    name: 'Dilkhush Kumar',
-    email: 'dilkhush@example.com',
-    role: 'Student',
-    
-  };
+  const {data : profileData, loading : profileLoading, error : profileError} = useSelector((state : any) => state.profile);
 
-  // Dummy questions data
+  console.log("Profile Data in Dashboard:",profileData,profileLoading,profileError);
+
+
+
+  useEffect(()=>{
+    dispatch(getUserProfileRequest())
+  },[])
+
   const questions = [
     {
       id: 1,
@@ -54,15 +56,17 @@ export default function Dashboard() {
             className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-xl hover:bg-slate-700"
           >
             <User size={18} />
-            <span>{user.name}</span>
+            <span>{profileData?.name || 'Profile'}</span>
           </button>
 
           {showProfile && (
             <div className="absolute right-0 mt-3 w-64 bg-slate-800 rounded-2xl shadow-lg p-4">
               <h3 className="font-semibold text-lg mb-2">Profile</h3>
-              <p className="text-sm text-slate-300">Name: {user.name}</p>
-              <p className="text-sm text-slate-300">Email: {user.email}</p>
-              <p className="text-sm text-slate-300 mb-4">Role: {user.role}</p>
+              <p className="text-sm text-slate-300">Name: {profileData?.name ?? 'N/A'}</p>
+              <p className="text-sm text-slate-300">Email: {profileData?.email ?? 'N/A'}</p>
+              <p className="text-sm text-slate-300">Rank: {profileData?.rank ?? 'N/A'}</p>
+              <p className="text-sm text-slate-300">Wins: {profileData?.wins ?? 'N/A'}</p>
+              <p className="text-sm text-slate-300">Losses: {profileData?.losses ?? 'N/A'}</p>
 
               <button
                 onClick={handleLogout}

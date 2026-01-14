@@ -9,8 +9,11 @@ import {
     logoutRequest,
     logoutSuccess,
     logoutFailure,
+    checkAuthRequest,
+    checkAuthSuccess,
+    checkAuthFailure,
     } from '../slice/authSlice';
-import {signupApi,loginApi,logoutApi} from '../services/authApi';
+import {signupApi,loginApi,logoutApi, checkAuthApi} from '../services/authApi';
 
 
 
@@ -47,10 +50,20 @@ function* logoutSaga() : any{
     }
 }
 
+function* checkAuthSaga() : any{
+    try{
+      const response =   yield call(checkAuthApi);
+      console.log("Check Auth response:",response.data);
+        yield put(checkAuthSuccess());
+    }catch(error : any){
+        yield put(checkAuthFailure());
+    }
+}
 
 
 export function* authSaga(){
     yield takeLatest(signupRequest.type,signupSaga);
     yield takeLatest(loginRequest.type,loginSaga);
     yield takeLatest(logoutRequest.type,logoutSaga);
+    yield takeLatest(checkAuthRequest.type,checkAuthSaga);
 }
