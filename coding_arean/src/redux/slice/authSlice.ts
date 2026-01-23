@@ -7,10 +7,7 @@ interface SignupPayload {
     confirm_password : string;
 }
 
-interface LoginPayload{
-    email : string;
-    password : string;
-}
+
 
 interface AuthState{
     loading : boolean;
@@ -49,7 +46,7 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
-        loginRequest(state){
+        loginRequest(state, _action:PayloadAction<{email:string; password:string; remember_me:boolean}>){
             
             state.loading = true;
             state.error = null;

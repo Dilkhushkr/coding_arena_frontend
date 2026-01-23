@@ -11,6 +11,9 @@ export default function Login() {
   const {isAuthenticated} = useSelector((state:any)=>state.auth);
   const [currentPage, setCurrentPage] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
+  const [remember_me, setRemember_me] = useState(false);
+  
+  console.log("Remember Me:", remember_me);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -34,6 +37,7 @@ export default function Login() {
         loginRequest({
         email : formData.email,
         password : formData.password,
+        remember_me : remember_me,
       })
     )
       alert('Login functionality would be implemented here');
@@ -183,7 +187,12 @@ export default function Login() {
               {currentPage === 'login' && (
                 <div className="flex items-center justify-between text-sm">
                   <label className="flex items-center text-gray-400 cursor-pointer">
-                    <input type="checkbox" className="w-4 h-4 mr-2 bg-gray-800 border-gray-700 rounded" />
+                    <input 
+                    type="checkbox" 
+                    className="w-4 h-4 mr-2 bg-gray-800 border-gray-700 rounded" 
+                    checked={remember_me} 
+                    onChange={(e)=>setRemember_me(e.target.checked)} 
+                    />
                     Remember me
                   </label>
                   <a href="#" className="text-blue-500 hover:text-blue-400 transition">
